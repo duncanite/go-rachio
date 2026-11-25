@@ -3,9 +3,10 @@
 A Go library and command for Rachio irrigation controllers, over Rachio's public cloud
 API, the one way into them: the account's controllers with their zones and schedules, what
 waters now, the history, and the commands that water a zone, stop, delay for rain and put
-a controller in standby. Written against Rachio's documentation and not yet run against
-Rachio's servers: [docs/design.md](docs/design.md) says what was read, and where the
-documentation contradicts itself.
+a controller in standby. Written against Rachio's documentation. What it reads was run
+against a Rachio 3; the commands that act were not sent to a controller:
+[docs/design.md](docs/design.md) says what was observed, and where the documentation
+contradicts itself.
 
 The command reads the account's API key from `RACHIO_API_KEY` and takes it as no flag. The
 key is in the Rachio app's profile, under "API key". With it set:

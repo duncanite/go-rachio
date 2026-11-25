@@ -1,8 +1,8 @@
 # go-rachio: the design
 
 Research into Rachio irrigation controllers, done on 2026-11-15 from public sources, and
-the module built from it. The module follows Rachio's documentation; nothing here was run
-against a controller or against Rachio's servers.
+the module built from it. The module follows Rachio's documentation. What it reads was
+run against one account's controller on 2026-11-25; what it commands was not.
 
 In short: Rachio is a cloud product with a good public API. The controller has no
 interface on the LAN, and Rachio has said it plans none for this hardware. It does keep
@@ -103,18 +103,38 @@ One command and two requests, on 2026-11-15, under a key that is no account's:
   it, `2026-11-17T00:00:00Z`, not as the prose says.
 - The count went down under the refused key.
 
+Six commands, on 2026-11-25, under an account's key: `devices`, `zones`, `schedules`,
+`status`, `events --last 72h` and `limit`. The account has one controller, a Rachio 3
+with eight zones (the model reads `GENERATION3_8ZONE_USI`), and two schedules, one fixed
+and one flex.
+
+- Each of the six was answered and read: the controller with its counts of zones and
+  schedules, the zones with their numbers, whether each is enabled and when it last
+  watered, the schedules with their kinds.
+- A zone that never watered has no time for it, and reads as none.
+- With nothing watering, the current schedule's answer reads as nothing. The answer
+  itself was not looked at.
+- A range of events with none in it is answered, and reads as no event.
+- The limit under a real key is the documentation's: 3,500 a day, the reset written as
+  midnight UTC of the next day.
+
 ## Open questions
 
-- Which controller: a Rachio 3, an earlier generation, or a hose timer. The last is a
-  different API.
 - Whether anything else already uses the same API key, and so its daily count.
 
 ## Not verified
 
-- Nothing above was observed on a controller, and the module was run against its own
-  stand-in only.
-- Every choice listed under "Where the documentation contradicts itself, or says
-  nothing".
+- No command that acts was sent to a controller: a zone or several started, watering
+  stopped, a rain delay, standby, a run paused or resumed, a schedule started or
+  skipped. Those were run against the module's own stand-in only.
+- An event, as Rachio's servers write one: the range asked had none.
+- An account with several controllers, a controller of another generation, one that is
+  offline, and what `status` reads while a zone waters.
+- Whether what was read is right: it was not compared with Rachio's app.
+- The choices listed under "Where the documentation contradicts itself, or says
+  nothing" that a command or an event would show: the key several zones are started
+  under, the events' range and the pause's fields, the statuses, a rain delay of zero,
+  what skipping a schedule skips.
 - What the controller speaks to Rachio's cloud, and its chips.
 - HomeKit's suspension is from press, not from Rachio.
 - Any terms of use for the API: none found on its pages.
